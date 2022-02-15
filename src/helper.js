@@ -7,8 +7,9 @@
 const util = require('util');
 const debug = util.debuglog('netdde');
 const C = require('./constants');
+const iconv = require('iconv-lite') // 后面添加的
 
-const RGX_nullOnEnd = /\u0000$/;
+const RGX_nullOnEnd = /\u0000.*$/;
 
 /**
  * @typedef {Object} CStringRet
@@ -86,7 +87,8 @@ function decodeFormat(format, data) {
 
     switch (format) {
         case C.dataType.CF_TEXT:
-            return data.toString('ascii').replace(RGX_nullOnEnd, '');
+            // return data.toString('ascii').replace(RGX_nullOnEnd, '');
+            return iconv.decode(data, 'gbk') // 修改
         case C.dataType.CF_UNICODETEXT:
             return data.toString('utf8').replace(RGX_nullOnEnd, '');
         default:

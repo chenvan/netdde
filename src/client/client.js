@@ -11,6 +11,7 @@ const os = require('os');
 const debug = util.debuglog('netdde');
 let netKeepAlive;
 try {
+    // @ts-ignore
     netKeepAlive = require('net-keepalive');
 } catch (e) {}
 
@@ -77,7 +78,7 @@ class NetDDEClient extends EventEmitter {
 
     _onEndpointTimeout() {
         debug('NetDDEClient _onEndpointTimeout');
-
+        
         this._destroy();
     }
 
@@ -143,7 +144,8 @@ class NetDDEClient extends EventEmitter {
             format: d.format,
             data: helper.decodeFormat(d.format, d.data)
         }
-        this.emit('advise', evtData);
+        // this.emit('advise', evtData);
+        this.emit(d.item, evtData);
     }
 
     _onDDEAdviceStartFailed(d) {
@@ -477,7 +479,8 @@ class NetDDEClient extends EventEmitter {
             item: item,
             format: format,
             async: false, //makes our life easier handling errors!
-            reqVal: requestValue
+            // reqVal: requestValue
+            reqVal: true
         });
 
         if (!res.result) throw new Error("Server returned error on starting advise of item");
